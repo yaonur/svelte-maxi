@@ -1,45 +1,27 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import Counter from './lib/Counter.svelte'
+    import ContactCard from "./ContactCard.svelte"
+
+    let name = "dumbass"
+    let jobTitle = "job"
+    let description = "some description"
+    let image='https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/1200px-Cat_November_2010-1a.jpg'
+    let age = 30
+    $: uppercaseName = name.toUpperCase()
+    const incrementAge = () => {
+        age += 1
+    }
 </script>
 
-<main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank"> 
-      <img src="/vite.svg" class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank"> 
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
-</main>
+<h1>hello {uppercaseName} ,age is {age}</h1>
+<button on:click={incrementAge}>add age</button>
+<input type="text" bind:value={name} />
+<input type="text" bind:value={jobTitle} />
+<input type="text" bind:value={description} />
+<input type="text" bind:value={image} />
+<ContactCard userName={name} {jobTitle} {description} {image} />
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
+    h1 {
+        color: purple;
+    }
 </style>
