@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+:root{
+  --blue: #008cff;
+  --white: rgba(248, 246, 246, 0.8);
+}
 html,
 body {
   position: relative;
@@ -29,6 +33,7 @@ button {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.26);
   cursor: pointer;
 }
+
 
 button:hover,
 button:active {
