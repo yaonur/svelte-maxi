@@ -5,8 +5,24 @@
     import Badge from "../components/Badge.svelte"
 
     export let meetup
+    let id = meetup.id
     const toggleFavorite = () => {
-        meetups.toggleFavorite(meetup.id)
+        console.log(id)
+
+        fetch(`https://svelte-fa067-default-rtdb.firebaseio.com/meetups/${id}.json`, {
+            method: "PATCH",
+            body: JSON.stringify({ isFavorite: !meetup.isFavorite }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Some thing went wrong")
+                }
+                meetups.toggleFavorite(id)
+            })
+            .catch((err) => console.log(err))
     }
     const dispatch = createEventDispatcher()
 </script>
@@ -30,7 +46,7 @@
     </div>
     <footer>
         <Button href="mailto:{meetup.contactEmail}">Contact</Button>
-        <Button type="button" on:click={()=>dispatch('show-details',meetup.id)}>Show Details</Button>
+        <Button type="button" on:click={() => dispatch("show-details", id)}>Show Details</Button>
         <Button mode="outline" success={meetup.isFavorite ? null : "success"} type="button" on:click={toggleFavorite}
             >{meetup.isFavorite ? "Unfavorite" : "Favorite"}</Button
         >

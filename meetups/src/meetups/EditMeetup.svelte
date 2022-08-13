@@ -26,7 +26,17 @@
         unsubscribe()
     }
     const deleteMeetup = () => {
-        meetups.removeMeetup(id)
+        fetch(`https://svelte-fa067-default-rtdb.firebaseio.com/meetups/${id}.json`, {
+            method: "DELETE",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("An error occurred, pleas try again!")
+                }
+                meetups.removeMeetup(id)
+            })
+            .catch((err) => console.log(err))
+
         dispatch("save")
     }
 
@@ -49,9 +59,39 @@
             contactEmail,
         }
         if (id) {
-            meetups.editMeetup(id, meetupData)
+            fetch(`https://svelte-fa067-default-rtdb.firebaseio.com/meetups/${id}.json`, {
+                method: "PATCH",
+                body: JSON.stringify(meetupData),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("An error occurred, please try again!")
+                    }
+                    meetups.editMeetup(id, meetupData)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         } else {
-            meetups.addMeetup(meetupData)
+            fetch("https://svelte-fa067-default-rtdb.firebaseio.com/meetups.json", {
+                method: "POST",
+                body: JSON.stringify({ ...meetupData, isFavorite: false }),
+                headers: { "Content-Type": "application/json" },
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error("An error occurred ,please try again!")
+                    }
+                    return res.json()
+                })
+                .then((data) => {
+                    console.log(data)
+                    meetups.addMeetup({ ...meetupData, isFavorite: false, id: data.name })
+                })
+                .catch((err) => console.log(err))
         }
         dispatch("save")
     }
