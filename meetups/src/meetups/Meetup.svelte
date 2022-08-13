@@ -3,11 +3,14 @@
     import { createEventDispatcher } from "svelte"
     import Button from "../components/Button.svelte"
     import Badge from "../components/Badge.svelte"
+    import Loading from "../components/Loading.svelte"
 
     export let meetup
+    let isLoading = false
     let id = meetup.id
     const toggleFavorite = () => {
         console.log(id)
+        isLoading = true
 
         fetch(`https://svelte-fa067-default-rtdb.firebaseio.com/meetups/${id}.json`, {
             method: "PATCH",
@@ -21,8 +24,12 @@
                     throw new Error("Some thing went wrong")
                 }
                 meetups.toggleFavorite(id)
+                isLoading = false
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                isLoading = false
+                console.log(err)
+            })
     }
     const dispatch = createEventDispatcher()
 </script>
@@ -47,9 +54,13 @@
     <footer>
         <Button href="mailto:{meetup.contactEmail}">Contact</Button>
         <Button type="button" on:click={() => dispatch("show-details", id)}>Show Details</Button>
-        <Button mode="outline" success={meetup.isFavorite ? null : "success"} type="button" on:click={toggleFavorite}
-            >{meetup.isFavorite ? "Unfavorite" : "Favorite"}</Button
-        >
+        {#if isLoading}
+			<span>Changing...</span>
+        {:else}
+            <Button mode="outline" success={meetup.isFavorite ? null : "success"} type="button" on:click={toggleFavorite}
+                >{meetup.isFavorite ? "Unfavorite" : "Favorite"}</Button
+            >
+        {/if}
     </footer>
 </article>
 

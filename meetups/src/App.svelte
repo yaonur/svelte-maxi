@@ -34,8 +34,8 @@
             }
             setTimeout(() => {
                 isLoading = false
-                meetupsStore.setMeetups(loadedMeetups)
-            }, 1000)
+                meetupsStore.setMeetups(loadedMeetups.reverse())
+            }, 100)
         })
         .catch((err) => console.log(err))
     // const toggleFavorite = (e) => {
